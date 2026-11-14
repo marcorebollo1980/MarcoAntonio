@@ -1,0 +1,98 @@
+<div class="form-page">
+    <div class="form-card">
+        <h1 class="form-title">Formulario de Registro</h1>
+        <hr class="divider" />
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+                <!-- Campo ID -->
+                <div class="form-field">
+                    <label for="id">ID</label>
+                    <input id="id" type="text" formControlName="id" [ngClass]="{ 'input-error': isFieldInvalid('id') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('id')">
+                        <span *ngIf="productForm.get('id')?.errors?.['required']">ID no válido!</span>
+                        <span *ngIf="productForm.get('id')?.errors?.['minlength'] || productForm.get('id')?.errors?.['maxlength']">
+              ID no válido! (Entre 3 y 10 caracteres)
+            </span>
+                        <span *ngIf="productForm.get('id')?.errors?.['idExists']">
+              ID no válido! Este ID ya existe.
+            </span>
+                        <span *ngIf="productForm.get('id')?.errors?.['idVerificationFailed']">
+              No se pudo verificar el ID. Revisa la conexión con el servidor e inténtalo nuevamente.
+            </span>
+                    </div>
+                </div>
+
+                <!-- Campo Nombre -->
+                <div class="form-field">
+                    <label for="name">Nombre</label>
+                    <input id="name" type="text" formControlName="name" placeholder="Tarjeta Crédito" [ngClass]="{ 'input-error': isFieldInvalid('name') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('name')">
+                        <span *ngIf="productForm.get('name')?.errors?.['required']">Este campo es requerido!</span>
+                        <span *ngIf="productForm.get('name')?.errors?.['minlength'] || productForm.get('name')?.errors?.['maxlength']">
+              Debe tener entre 5 y 100 caracteres!
+            </span>
+                    </div>
+                </div>
+
+                <!-- Campo Descripción -->
+                <div class="form-field">
+                    <label for="description">Descripción</label>
+                    <input id="description" type="text" formControlName="description" [ngClass]="{ 'input-error': isFieldInvalid('description') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('description')">
+                        <span *ngIf="productForm.get('description')?.errors?.['required']">Este campo es requerido!</span>
+                        <span *ngIf="productForm.get('description')?.errors?.['minlength'] || productForm.get('description')?.errors?.['maxlength']">
+              Debe tener entre 10 y 200 caracteres!
+            </span>
+                    </div>
+                </div>
+
+                <!-- Campo Logo -->
+                <div class="form-field">
+                    <label for="logo">Logo</label>
+                    <input id="logo" type="url" formControlName="logo" placeholder="https://ejemplo.com/logo.png" (input)="resetLogoPreview()" [ngClass]="{ 'input-error': isFieldInvalid('logo') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('logo')">
+                        <span *ngIf="productForm.get('logo')?.errors?.['required']">Este campo es requerido!</span>
+                        <span *ngIf="productForm.get('logo')?.errors?.['invalidUrl']">
+              Ingresa una URL válida que comience con http:// o https://.
+            </span>
+                    </div>
+                    <div class="logo-preview" *ngIf="logoPreviewUrl as previewUrl">
+                        <img *ngIf="!logoPreviewFailed" [src]="previewUrl" [alt]="'Vista previa del logo de ' + (productForm.get('name')?.value || 'producto')" (error)="onLogoPreviewError()" />
+                        <span *ngIf="logoPreviewFailed" role="status">No se pudo cargar la imagen desde esta URL.</span>
+                    </div>
+                </div>
+
+                <!-- Campo Fecha Liberación -->
+                <div class="form-field">
+                    <label for="date_release">Fecha Liberación</label>
+                    <input id="date_release" type="date" formControlName="date_release" [ngClass]="{ 'input-error': isFieldInvalid('date_release') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('date_release')">
+                        <span *ngIf="productForm.get('date_release')?.errors?.['required']">Este campo es requerido!</span>
+                        <span *ngIf="productForm.get('date_release')?.errors?.['minToday']">
+              La fecha debe ser igual o mayor a la fecha actual!
+            </span>
+                    </div>
+                </div>
+
+                <!-- Campo Fecha Revisión -->
+                <div class="form-field">
+                    <label for="date_revision">Fecha Revisión</label>
+                    <input id="date_revision" type="date" formControlName="date_revision" [ngClass]="{ 'input-error': isFieldInvalid('date_revision') }" />
+                    <div class="error-text" *ngIf="isFieldInvalid('date_revision')">
+                        <span *ngIf="productForm.get('date_revision')?.errors?.['required']">Este campo es requerido!</span>
+                        <span *ngIf="productForm.hasError('notOneYearAfter')">
+              La fecha debe ser exactamente un año posterior a la fecha de liberación!
+            </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones Reiniciar y Enviar (Diseño D2) -->
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="onReset()">Reiniciar</button>
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
